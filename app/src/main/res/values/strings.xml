@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MarvelAppMirror</string>
+    <string name="app_name">Heroes</string>
     <string name="common_no_internet_connection">No internet connection</string>
     <string name="common_try_again">Try again</string>
 
@@ -17,7 +17,7 @@
     <string name="characters_screen_title">Characters</string>
     <string name="characters_no_results_found">No results found</string>
 
-    <string name="details_comics_category">Comics</string>
+    <string name="details_comics_category">ComiXcs</string>
 
     <string name="favorites_screen_title">Favorites</string>
     <string name="favorites_no_products_in_the_list">No heroes in the favorite list</string>
