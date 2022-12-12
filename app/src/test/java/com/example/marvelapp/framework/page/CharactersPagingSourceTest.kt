@@ -3,10 +3,8 @@ package com.example.marvelapp.framework.page
 import androidx.paging.PagingSource
 import com.example.core.data.repository.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
-import com.example.marvelapp.fractory.response.DataWrapperResponseFactory
 import com.example.marvelapp.framework.network.response.DataWrapperResponse
 import com.example.testing.MainDispatcherRule
-import com.example.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,9 +29,9 @@ class CharactersPagingSourceTest {
 
     private lateinit var charactersPagingSource: CharactersPagingSource
 
-    private val dataWrapperResponseFactory = DataWrapperResponseFactory()
-
-    private val characterFactory = CharacterFactory()
+//    private val dataWrapperResponseFactory = DataWrapperResponseFactory()
+//
+//    private val characterFactory = CharacterFactory()
 
     @Before
     fun setUp() {
@@ -41,37 +39,37 @@ class CharactersPagingSourceTest {
         charactersPagingSource = CharactersPagingSource(remoteDataSource, "")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `should return success load result when load is called`() = runTest {
-        // Arrange
-        whenever(remoteDataSource.fetchCharacters(any()))
-            .thenReturn(dataWrapperResponseFactory.create())
-
-        // Act
-        val result = charactersPagingSource.load(
-            PagingSource.LoadParams.Refresh(
-                null,
-                loadSize = 2,
-                false
-            )
-        )
-
-        //Assert
-        val expected = listOf(
-            characterFactory.create(CharacterFactory.Hero.ThreeDMan),
-            characterFactory.create(CharacterFactory.Hero.ABomb),
-        )
-
-        assertEquals(
-            PagingSource.LoadResult.Page(
-                data = expected,
-                prevKey = null,
-                nextKey = 20
-            ),
-            result
-        )
-    }
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    @Test
+//    fun `should return success load result when load is called`() = runTest {
+//        // Arrange
+//        whenever(remoteDataSource.fetchCharacters(any()))
+//            .thenReturn(dataWrapperResponseFactory.create())
+//
+//        // Act
+//        val result = charactersPagingSource.load(
+//            PagingSource.LoadParams.Refresh(
+//                null,
+//                loadSize = 2,
+//                false
+//            )
+//        )
+//
+//        //Assert
+//        val expected = listOf(
+//            characterFactory.create(CharacterFactory.Hero.ThreeDMan),
+//            characterFactory.create(CharacterFactory.Hero.ABomb),
+//        )
+//
+//        assertEquals(
+//            PagingSource.LoadResult.Page(
+//                data = expected,
+//                prevKey = null,
+//                nextKey = 20
+//            ),
+//            result
+//        )
+//    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
