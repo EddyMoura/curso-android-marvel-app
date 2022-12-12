@@ -6,7 +6,6 @@ import com.example.core.data.repository.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
 import com.example.marvelapp.framework.network.response.DataWrapperResponse
 import com.example.marvelapp.framework.network.response.toCharacterModel
-import java.io.IOException
 
 class CharactersPagingSource(
     private val remoteDataSource: CharactersRemoteDataSource<DataWrapperResponse>,
