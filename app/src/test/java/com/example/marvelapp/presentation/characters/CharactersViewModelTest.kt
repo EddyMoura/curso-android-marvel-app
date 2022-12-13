@@ -18,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CharactersViewModelTest {
 
@@ -43,7 +44,6 @@ class CharactersViewModelTest {
         charactersViewModel = CharactersViewModel(getCharactersUseCase)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `should validate the paging data object values when calling charactersPagingData`() =
         runTest {
@@ -60,7 +60,6 @@ class CharactersViewModelTest {
             assertEquals(1, result.count())
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test(expected = RuntimeException::class)
     fun `should throw an exception when the calling to the use case returns an exception`() {
         runTest {

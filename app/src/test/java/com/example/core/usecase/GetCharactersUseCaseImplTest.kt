@@ -19,6 +19,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
 class GetCharactersUseCaseImplTest {
 
@@ -40,7 +41,6 @@ class GetCharactersUseCaseImplTest {
         getCharactersUseCase = GetCharactersUseCaseImpl(repository)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `should validate flow paging data creation when invoke form use case is called`() =
         runTest {
