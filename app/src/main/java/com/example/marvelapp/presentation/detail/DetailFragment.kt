@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.example.marvelapp.R
 import com.example.marvelapp.databinding.FragmentDetailBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +18,8 @@ class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
+
+    private val viewModel: DetailViewModel by viewModels()
 
     @Inject
     lateinit var imageLoader: ImageLoader
@@ -40,14 +42,39 @@ class DetailFragment : Fragment() {
         val detailViewArg = args.detailViewArg
         binding.imageCharacter.run {
             transitionName = detailViewArg.name
-            imageLoader.loadImage(
-                this,
-                detailViewArg.imageUrl,
-                R.drawable.ic_img_loading_error
-            )
+            imageLoader.loadImage(this, detailViewArg.imageUrl)
         }
 
         setSharedElementTransitionOnEnter()
+
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            binding.flipperDetail.displayedChild = when (uiState) {
+                DetailViewModel.UiState.Loading -> {
+                    FLIPPER_CHILD_POSITION_LOADING
+                }
+                is DetailViewModel.UiState.Success -> {
+                    initRecyclerViewDetail(uiState)
+                    FLIPPER_CHILD_POSITION_DETAIL
+                }
+                DetailViewModel.UiState.Error -> {
+                    binding.includeErrorView.buttonRetry.setOnClickListener {
+                        viewModel.getCharactersCategories(detailViewArg.characterId)
+                    }
+                    FLIPPER_CHILD_POSITION_ERROR
+                }
+                DetailViewModel.UiState.Empty -> {
+                    FLIPPER_CHILD_POSITION_EMPTY
+                }
+            }
+        }
+        viewModel.getCharactersCategories(detailViewArg.characterId)
+    }
+
+    private fun initRecyclerViewDetail(uiState: DetailViewModel.UiState.Success) {
+        binding.recyclerParentDetail.run {
+            setHasFixedSize(true)
+            adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
+        }
     }
 
     // Define a animação da transição como "move"
@@ -56,6 +83,13 @@ class DetailFragment : Fragment() {
             .inflateTransition(android.R.transition.move).apply {
                 sharedElementEnterTransition = this
             }
+    }
+
+    companion object {
+        private const val FLIPPER_CHILD_POSITION_LOADING = 0
+        private const val FLIPPER_CHILD_POSITION_DETAIL = 1
+        private const val FLIPPER_CHILD_POSITION_ERROR = 2
+        private const val FLIPPER_CHILD_POSITION_EMPTY = 3
     }
 
     override fun onDestroyView() {

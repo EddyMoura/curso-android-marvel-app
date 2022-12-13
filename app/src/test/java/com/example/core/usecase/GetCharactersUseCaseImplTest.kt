@@ -2,7 +2,7 @@ package com.example.core.usecase
 
 import androidx.paging.PagingConfig
 import com.example.core.data.repository.CharactersRepository
-import com.example.testing.MainDispatcherRule
+import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
 import com.example.testing.pagingsoruce.PagingSourceFactory
 import com.nhaarman.mockitokotlin2.verify
@@ -19,11 +19,12 @@ import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
 class GetCharactersUseCaseImplTest {
 
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     @Mock
     lateinit var repository: CharactersRepository
@@ -40,7 +41,6 @@ class GetCharactersUseCaseImplTest {
         getCharactersUseCase = GetCharactersUseCaseImpl(repository)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `should validate flow paging data creation when invoke form use case is called`() =
         runTest {

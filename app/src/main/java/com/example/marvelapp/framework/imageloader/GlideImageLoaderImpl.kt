@@ -7,9 +7,15 @@ import javax.inject.Inject
 
 class GlideImageLoaderImpl @Inject constructor() : ImageLoader {
 
-    override fun loadImage(imageView: ImageView, imageUrl: String, fallback: Int) {
+    override fun loadImage(
+        imageView: ImageView,
+        imageUrl: String,
+        placeholder: Int,
+        fallback: Int
+    ) {
         Glide.with(imageView.rootView)
             .load(imageUrl)
+            .placeholder(placeholder)
             .fallback(R.drawable.ic_img_loading_error)
             .into(imageView)
     }
