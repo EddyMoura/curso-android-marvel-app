@@ -2,7 +2,7 @@ package com.example.core.usecase
 
 import androidx.paging.PagingConfig
 import com.example.core.data.repository.CharactersRepository
-import com.example.testing.MainDispatcherRule
+import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
 import com.example.testing.pagingsoruce.PagingSourceFactory
 import com.nhaarman.mockitokotlin2.verify
@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations
 class GetCharactersUseCaseImplTest {
 
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     @Mock
     lateinit var repository: CharactersRepository

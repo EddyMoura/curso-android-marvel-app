@@ -2,15 +2,17 @@ package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
 import com.example.core.usecase.GetCharactersUseCase
-import com.example.testing.MainDispatcherRule
+import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class CharactersViewModelTest {
 
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var charactersViewModel: CharactersViewModel
 
@@ -57,7 +59,7 @@ class CharactersViewModelTest {
 
             val result = charactersViewModel.charactersPagingData("")
 
-            assertEquals(1, result.count())
+            assertNotNull(result.first())
         }
 
     @Test(expected = RuntimeException::class)

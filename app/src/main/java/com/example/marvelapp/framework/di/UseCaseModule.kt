@@ -1,7 +1,7 @@
 package com.example.marvelapp.framework.di
 
-import com.example.core.usecase.GetCharacterCategoryUseCase
-import com.example.core.usecase.GetCharacterCategoryUseCaseImpl
+import com.example.core.usecase.GetCharacterCategoriesUseCase
+import com.example.core.usecase.GetCharacterCategoriesUseCaseImpl
 import com.example.core.usecase.GetCharactersUseCase
 import com.example.core.usecase.GetCharactersUseCaseImpl
 import dagger.Binds
@@ -18,6 +18,6 @@ interface UseCaseModule {
 
     @Binds
     fun bindGetComicsUseCase(
-        useCaseImpl: GetCharacterCategoryUseCaseImpl
-    ): GetCharacterCategoryUseCase
+        useCaseImpl: GetCharacterCategoriesUseCaseImpl
+    ): GetCharacterCategoriesUseCase
 }
