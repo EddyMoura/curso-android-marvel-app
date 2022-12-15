@@ -1,5 +1,8 @@
 package com.example.marvelapp.framework.di
 
+
+import com.example.core.usecase.AddFavoriteUseCase
+import com.example.core.usecase.AddFavoriteUseCaseImpl
 import com.example.core.usecase.GetCharacterCategoriesUseCase
 import com.example.core.usecase.GetCharacterCategoriesUseCaseImpl
 import com.example.core.usecase.GetCharactersUseCase
@@ -14,7 +17,14 @@ import dagger.hilt.android.components.ViewModelComponent
 interface UseCaseModule {
 
     @Binds
-    fun bindGetCharactersUseCase(useCaseImpl: GetCharactersUseCaseImpl): GetCharactersUseCase
+    fun bindGetCharactersUseCase(
+        useCaseImpl: GetCharactersUseCaseImpl
+    ): GetCharactersUseCase
+
+    @Binds
+    fun bindAddFavoriteUseCase(
+        useCaseImpl: AddFavoriteUseCaseImpl
+    ): AddFavoriteUseCase
 
     @Binds
     fun bindGetComicsUseCase(

@@ -1,6 +1,6 @@
 package com.example.core.usecase
 
-import com.example.core.data.repository.CharactersRepository
+import com.example.core.data.repository.characters.CharactersRepository
 import com.example.core.domain.model.Comic
 import com.example.core.domain.model.Event
 import com.example.core.usecase.GetCharacterCategoriesUseCase.GetCategoriesParams

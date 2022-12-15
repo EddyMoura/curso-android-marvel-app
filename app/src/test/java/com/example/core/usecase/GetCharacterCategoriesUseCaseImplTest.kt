@@ -1,6 +1,6 @@
 package com.example.core.usecase
 
-import com.example.core.data.repository.CharactersRepository
+import com.example.core.data.repository.characters.CharactersRepository
 import com.example.core.usecase.base.ResultStatus
 import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory

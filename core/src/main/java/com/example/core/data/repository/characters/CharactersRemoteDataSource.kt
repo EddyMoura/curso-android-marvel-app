@@ -1,4 +1,4 @@
-package com.example.core.data.repository
+package com.example.core.data.repository.characters
 
 import com.example.core.domain.model.CharacterPaging
 import com.example.core.domain.model.Comic

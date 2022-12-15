@@ -30,7 +30,10 @@ class DetailChildAdapter(
         private val imageCategory: ImageView = itemBinding.imageItemCategory
 
         fun bind(detailChildList: DetailChildViewEntity) {
-            imageLoader.loadImage(imageCategory, detailChildList.imageUrl)
+            imageLoader.loadImage(
+                imageCategory,
+                detailChildList.imageUrl
+            )
         }
 
         companion object {

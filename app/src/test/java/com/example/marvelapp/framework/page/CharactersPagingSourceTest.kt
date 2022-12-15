@@ -1,7 +1,7 @@
 package com.example.marvelapp.framework.page
 
 import androidx.paging.PagingSource
-import com.example.core.data.repository.CharactersRemoteDataSource
+import com.example.core.data.repository.characters.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
 import com.example.marvelapp.fractory.response.CharacterPagingFactory
 import com.example.testing.MainCoroutineRule

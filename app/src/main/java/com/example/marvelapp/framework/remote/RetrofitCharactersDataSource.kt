@@ -1,6 +1,6 @@
 package com.example.marvelapp.framework.remote
 
-import com.example.core.data.repository.CharactersRemoteDataSource
+import com.example.core.data.repository.characters.CharactersRemoteDataSource
 import com.example.core.domain.model.CharacterPaging
 import com.example.core.domain.model.Comic
 import com.example.core.domain.model.Event
