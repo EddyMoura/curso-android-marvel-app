@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.example.core.usecase.AddFavoriteUseCase
+import com.example.core.usecase.CheckFavoriteUseCase
 import com.example.marvelapp.R
 import com.example.marvelapp.presentation.detail.DetailViewArg
 import com.example.marvelapp.presentation.extensions.watchStatus
@@ -14,6 +15,7 @@ import kotlin.coroutines.CoroutineContext
 
 class FavoriteUiStateLiveData(
     private val coroutineContext: CoroutineContext,
+    private val checkFavoriteUseCase: CheckFavoriteUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase
 ) {
 
@@ -21,7 +23,21 @@ class FavoriteUiStateLiveData(
     val state: LiveData<UiState> = action.switchMap {
         liveData(coroutineContext) {
             when (it) {
-                is Action.Default -> emit(UiState.Icon(R.drawable.ic_favorite_unchecked))
+                is Action.CheckFavorite -> {
+                    checkFavoriteUseCase.invoke(
+                        CheckFavoriteUseCase.Params(it.characterId)
+                    ).watchStatus(
+                        loading = {},
+                        success = { isFavorite ->
+                            var icon = R.drawable.ic_favorite_unchecked
+                            if (isFavorite) {
+                                R.drawable.ic_favorite_checked
+                            }
+                            emit(UiState.Icon(icon))
+                        },
+                        error = {}
+                    )
+                }
                 is Action.Update -> {
                     it.detailViewArg.run {
                         addFavoriteUseCase.invoke(
@@ -47,12 +63,12 @@ class FavoriteUiStateLiveData(
         action.value = Action.Update(detailViewArg)
     }
 
-    fun setIconDefault() {
-        action.value = Action.Default
+    fun checkFavorite(characterId: Int) {
+        action.value = Action.CheckFavorite(characterId)
     }
 
     sealed class Action {
-        object Default : Action()
+        data class CheckFavorite(val characterId: Int) : Action()
         data class Update(val detailViewArg: DetailViewArg) : Action()
     }
 

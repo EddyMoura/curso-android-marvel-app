@@ -3,6 +3,8 @@ package com.example.marvelapp.framework.di
 
 import com.example.core.usecase.AddFavoriteUseCase
 import com.example.core.usecase.AddFavoriteUseCaseImpl
+import com.example.core.usecase.CheckFavoriteUseCase
+import com.example.core.usecase.CheckFavoriteUseCaseImpl
 import com.example.core.usecase.GetCharacterCategoriesUseCase
 import com.example.core.usecase.GetCharacterCategoriesUseCaseImpl
 import com.example.core.usecase.GetCharactersUseCase
@@ -20,6 +22,11 @@ interface UseCaseModule {
     fun bindGetCharactersUseCase(
         useCaseImpl: GetCharactersUseCaseImpl
     ): GetCharactersUseCase
+
+    @Binds
+    fun bindCheckFavoriteUseCase(
+        useCaseImpl: CheckFavoriteUseCaseImpl
+    ): CheckFavoriteUseCase
 
     @Binds
     fun bindAddFavoriteUseCase(
