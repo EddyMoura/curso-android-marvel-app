@@ -4,9 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.core.domain.model.Comic
 import com.example.core.usecase.AddFavoriteUseCase
+import com.example.core.usecase.CheckFavoriteUseCase
 import com.example.core.usecase.GetCharacterCategoriesUseCase
+import com.example.core.usecase.RemoveFavoriteUseCase
 import com.example.core.usecase.base.ResultStatus
 import com.example.marvelapp.R
+import com.example.marvelapp.presentation.detail.livedata.FavoriteUiStateLiveData
 import com.example.marvelapp.presentation.detail.livedata.UiActionStateLiveData
 import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
@@ -42,11 +45,20 @@ class DetailViewModelTest {
     private lateinit var getCharacterCategoriesUseCase: GetCharacterCategoriesUseCase
 
     @Mock
+    private lateinit var checkFavoriteUseCase: CheckFavoriteUseCase
+
+    @Mock
     private lateinit var addFavoriteUseCase: AddFavoriteUseCase
+
+    @Mock
+    private lateinit var removeFavoriteUseCase: RemoveFavoriteUseCase
 
     //mocked livedata
     @Mock
     private lateinit var uiStateObserver: Observer<UiActionStateLiveData.UiState>
+
+    @Mock
+    private lateinit var favoriteUiStateObserver: Observer<FavoriteUiStateLiveData.UiState>
 
     private val characters = CharacterFactory().create(CharacterFactory.Hero.ThreeDMan)
     private val comics = listOf(ComicFactory().create(ComicFactory.FakeComic.FakeComic1))
@@ -58,12 +70,15 @@ class DetailViewModelTest {
     fun setUp() {
         viewModel = DetailViewModel(
             getCharacterCategoriesUseCase,
+            checkFavoriteUseCase,
             addFavoriteUseCase,
+            removeFavoriteUseCase,
             mainCoroutineRule.textDispatcherProvider
-        )
-
+        ).apply {
+            categories.state.observeForever(uiStateObserver)
+            favorite.state.observeForever(favoriteUiStateObserver)
+        }
         //link between view model and livedata
-        viewModel.categories.state.observeForever(uiStateObserver)
     }
 
     @Test
@@ -203,5 +218,110 @@ class DetailViewModelTest {
             verify(
                 uiStateObserver
             ).onChanged(isA<UiActionStateLiveData.UiState.Error>())
+        }
+
+    @Test
+    fun `should notify favorite_uiState with filled favorite icon when check favorite returns true`() =
+        runTest {
+            // Arrange
+            whenever(checkFavoriteUseCase.invoke(any()))
+                .thenReturn(
+                    flowOf(
+                        ResultStatus.Success(true)
+                    )
+                )
+
+            // Action
+            viewModel.favorite.checkFavorite(characters.id)
+
+            // Assert
+            verify(favoriteUiStateObserver).onChanged(
+                isA<FavoriteUiStateLiveData.UiState.Icon>()
+            )
+
+            val uiState = viewModel.favorite.state.value as FavoriteUiStateLiveData.UiState.Icon
+            assertEquals(R.drawable.ic_favorite_checked, uiState.icon)
+        }
+
+    @Test
+    fun `should notify favorite_uiState with not filled favorite icon when check favorite returns false`() =
+        runTest {
+            // Arrange
+            whenever(checkFavoriteUseCase.invoke(any()))
+                .thenReturn(
+                    flowOf(
+                        ResultStatus.Success(false)
+                    )
+                )
+            // Act
+            viewModel.favorite.checkFavorite(characters.id)
+
+            // Assert
+            verify(favoriteUiStateObserver).onChanged(
+                isA<FavoriteUiStateLiveData.UiState.Icon>()
+            )
+
+            val uiState = viewModel.favorite.state.value as FavoriteUiStateLiveData.UiState.Icon
+            assertEquals(R.drawable.ic_favorite_unchecked, uiState.icon)
+        }
+
+    @Test
+    fun `should notify favorite_uiState with filled favorite icon when current icon is unchecked`() =
+        runTest {
+            // Arrange
+            whenever(addFavoriteUseCase.invoke(any()))
+                .thenReturn(
+                    flowOf(
+                        ResultStatus.Success(Unit)
+                    )
+                )
+
+            // Act
+            viewModel.run {
+                favorite.currentFavoriteIcon = R.drawable.ic_favorite_unchecked
+                favorite.update(
+                    DetailViewArg(
+                        name = characters.name,
+                        imageUrl = characters.imageUrl,
+                        characterId = characters.id
+                    )
+                )
+            }
+
+            // Assert
+            verify(favoriteUiStateObserver).onChanged(isA<FavoriteUiStateLiveData.UiState.Icon>())
+            val uiState =
+                viewModel.favorite.state.value as FavoriteUiStateLiveData.UiState.Icon
+            assertEquals(R.drawable.ic_favorite_checked, uiState.icon)
+        }
+
+    @Test
+    fun `should call remove and notify favorite_uiState with filled favorite icon when current icon is checked`() =
+        runTest {
+            // Arrange
+            whenever(removeFavoriteUseCase.invoke(any()))
+                .thenReturn(
+                    flowOf(
+                        ResultStatus.Success(Unit)
+                    )
+                )
+
+            // Act
+            viewModel.run {
+                favorite.currentFavoriteIcon = R.drawable.ic_favorite_checked
+                favorite.update(
+                    DetailViewArg(
+                        name = characters.name,
+                        imageUrl = characters.imageUrl,
+                        characterId = characters.id
+                    )
+                )
+            }
+
+            // Assert
+            verify(favoriteUiStateObserver).onChanged(isA<FavoriteUiStateLiveData.UiState.Icon>())
+            val uiState =
+                viewModel.favorite.state.value as FavoriteUiStateLiveData.UiState.Icon
+            assertEquals(R.drawable.ic_favorite_unchecked, uiState.icon)
         }
 }
